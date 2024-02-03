@@ -11,25 +11,25 @@ public class ClientRepository
         _session = session;
     }
 
-    public int Save(Client client)
+    public int Insert(Client client)
     {
         string query = "INSERT INTO Client (Name, Gender, Birthdate, Cpf) VALUES(@Name, @Gender, @Birthdate, @Cpf)";
         return _session.Connection.Execute(query, client, _session.Transaction);
     }
 
-    public int Save(List<Client> client)
+    public int Insert(List<Client> client)
     {
         string query = "INSERT INTO Client (Name, Gender, Birthdate, Cpf) VALUES(@Name, @Gender, @Birthdate, @Cpf)";
         return _session.Connection.Execute(query, client, _session.Transaction);
     }
 
-    public IEnumerable<Client> Get()
+    public IEnumerable<Client> Select()
     {
         string query ="SELECT * FROM Client";
         return _session.Connection.Query<Client>(query);
     }
 
-    public Client? Get(int id)
+    public Client? Select(int id)
     {
         string query ="SELECT * FROM Client WHERE Id=@Id";
         return _session.Connection.QueryFirstOrDefault<Client>(query, new {Id = id});

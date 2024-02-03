@@ -25,7 +25,7 @@ public static class Application
         try
         {
             transaction.BeginTransaction();
-            var rows = repo.Save(client);
+            var rows = repo.Insert(client);
             transaction.Commit();
             printColor(ConsoleColor.Yellow, $"\tLines affected: {rows}");
         }
@@ -51,7 +51,7 @@ public static class Application
         try
         {
             transaction.BeginTransaction();
-            var rows = repo.Save(clients);
+            var rows = repo.Insert(clients);
             transaction.Commit();
             printColor(ConsoleColor.Yellow, $"\tLines affected: {rows}");
         }
@@ -75,7 +75,7 @@ public static class Application
 
         try
         {
-            var clients = repo.Get();
+            var clients = repo.Select();
             if (take == 0) take = clients.Count();
             printColor(ConsoleColor.DarkYellow, $"\tTotal: {clients.Count()} | Take: {take}");
             foreach (var client in clients.Take(take)) printColor(ConsoleColor.Yellow, $"\t{client}");
@@ -99,7 +99,7 @@ public static class Application
 
         try
         {
-            var client = repo.Get(id);
+            var client = repo.Select(id);
             if (client is null) printColor(ConsoleColor.Red, $"\tNo record found with Id={id}");
             else printColor(ConsoleColor.Yellow, $"\t{client}");
         }
@@ -150,7 +150,7 @@ public static class Application
         try
         {
             transaction.BeginTransaction();
-            id = repo.Get().Count()-1;
+            id = repo.Select().Count()-1;
             var rows = repo.Delete(id);
             transaction.Commit();
             printColor(ConsoleColor.Yellow, $"\tId={id} record removed | {rows} lines affected");
