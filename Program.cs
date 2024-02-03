@@ -14,7 +14,7 @@ void Main()
         Application.CreateClient(clientTest);
         Application.GetClients(5);
         Application.GetClient(5);
-        Application.GetClient(50);
+        Application.GetClient(50000);
 
         var clients = Enumerable.Repeat(clientTest, 10).ToList();
         Application.CreateClients(clients);
@@ -22,7 +22,7 @@ void Main()
         clientTest.Id = 10;
         clientTest.Name = "Test-Name-Update";
         Application.UpdateClient(clientTest);
-        Application.DeleteClient(0); // Sempre remove o penúltimo elemento
+        Application.DeleteClient(0);
     }
     catch(Exception ex)
     {
