@@ -15,22 +15,19 @@ public static class Application
     public static void CreateClient(Client client)
     {
         printColor(ConsoleColor.Green, "Running CreateClient");
-        using var dbSession = new DbSession();
-        using var transaction = new UnitOfWork(dbSession);
-        var repoClient = new ClientRepository(dbSession);
-        var repoLog = new LogClientRepository(dbSession);
+        using var uow = new UnitOfWork(new DbSession());
 
         try
         {
-            transaction.BeginTransaction();
-            var rows = repoClient.Insert(client);
-            repoLog.Insert(rows);
-            transaction.Commit();
+            uow.BeginTransaction();
+            var rows = uow.ClientRepository.Insert(client);
+            uow.LogClientRepository.Insert(rows);
+            uow.Commit();
             printColor(ConsoleColor.Yellow, $"\tLines affected: {rows}");
         }
         catch(Exception ex)
         {
-            transaction.RollBack();
+            uow.RollBack();
             printColor(ConsoleColor.Red, "CreateClient Error");
             printColor(ConsoleColor.White, ex.ToString());
         }
@@ -43,22 +40,19 @@ public static class Application
     public static void CreateClients(List<Client> clients)
     {
         printColor(ConsoleColor.Green, $"Running CreateClients");
-        using var dbSession = new DbSession();
-        using var transaction = new UnitOfWork(dbSession);
-        var repoClient = new ClientRepository(dbSession);
-        var repoLog = new LogClientRepository(dbSession);
+        using var uow = new UnitOfWork(new DbSession());
 
         try
         {
-            transaction.BeginTransaction();
-            var rows = repoClient.Insert(clients);
-            repoLog.Insert(rows);
-            transaction.Commit();
+            uow.BeginTransaction();
+            var rows = uow.ClientRepository.Insert(clients);
+            uow.LogClientRepository.Insert(rows);
+            uow.Commit();
             printColor(ConsoleColor.Yellow, $"\tLines affected: {rows}");
         }
         catch(Exception ex)
         {
-            transaction.RollBack();
+            uow.RollBack();
             printColor(ConsoleColor.Red, "CreateClient Error");
             printColor(ConsoleColor.White, ex.ToString());
         }
@@ -71,12 +65,11 @@ public static class Application
     public static void GetClients(int take=0)
     {
         printColor(ConsoleColor.Green, "Running GetClients");
-        using var dbSession = new DbSession();
-        var repo = new ClientRepository(dbSession);
+        var uow = new UnitOfWork(new DbSession());
 
         try
         {
-            var clients = repo.Select();
+            var clients = uow.ClientRepository.Select();
             if (take == 0) take = clients.Count();
             printColor(ConsoleColor.DarkYellow, $"\tTotal: {clients.Count()} | Take: {take}");
             foreach (var client in clients.Take(take)) printColor(ConsoleColor.Yellow, $"\t{client}");
@@ -95,12 +88,11 @@ public static class Application
     public static void GetClient(int id)
     {
         printColor(ConsoleColor.Green, "Running GetClient");
-        using var dbSession = new DbSession();
-        var repo = new ClientRepository(dbSession);
+        var uow = new UnitOfWork(new DbSession());
 
         try
         {
-            var client = repo.Select(id);
+            var client = uow.ClientRepository.Select(id);
             if (client is null) printColor(ConsoleColor.Red, $"\tNo record found with Id={id}");
             else printColor(ConsoleColor.Yellow, $"\t{client}");
         }
@@ -118,22 +110,20 @@ public static class Application
     public static void UpdateClient(Client client)
     {
         printColor(ConsoleColor.Green, "Running UpdateClient");
-        using var dbSession = new DbSession();
-        using var transaction = new UnitOfWork(dbSession);
-        var repo = new ClientRepository(dbSession);
+        var uow = new UnitOfWork(new DbSession());
 
         try
         {
-            transaction.BeginTransaction();
-            var rows = repo.Update(client);
-            transaction.Commit();
+            uow.BeginTransaction();
+            var rows = uow.ClientRepository.Update(client);
+            uow.Commit();
             printColor(ConsoleColor.Yellow, $"\tLines affected: {rows}");
         }
         catch(Exception ex)
         {
             printColor(ConsoleColor.Red, "UpdateClient Error");
             printColor(ConsoleColor.White, ex.ToString());
-            transaction.RollBack();
+            uow.RollBack();
         }
         finally
         {
@@ -144,23 +134,21 @@ public static class Application
     public static void DeleteClient(int id)
     {
         printColor(ConsoleColor.Green, "Running DeleteClient");
-        using var dbSession = new DbSession();
-        using var transaction = new UnitOfWork(dbSession);
-        var repo = new ClientRepository(dbSession);
+        var uow = new UnitOfWork(new DbSession());
 
         try
         {
-            transaction.BeginTransaction();
-            id = repo.Select().Count()-1;
-            var rows = repo.Delete(id);
-            transaction.Commit();
+            uow.BeginTransaction();
+            id = uow.ClientRepository.Select().Count()-1;
+            var rows = uow.ClientRepository.Delete(id);
+            uow.Commit();
             printColor(ConsoleColor.Yellow, $"\tId={id} record removed | {rows} lines affected");
         }
         catch(Exception ex)
         {
             printColor(ConsoleColor.Red, "DeleteClient Error");
             printColor(ConsoleColor.White, ex.ToString());
-            transaction.RollBack();
+            uow.RollBack();
         }
         finally
         {
