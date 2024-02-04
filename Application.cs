@@ -1,7 +1,4 @@
-﻿
-using System.Data;
-using System.Transactions;
-using ConsoleApp.Models;
+﻿using ConsoleApp.Models;
 using ConsoleApp.Repository;
 
 namespace ConsoleApp.Application;
@@ -20,12 +17,14 @@ public static class Application
         printColor(ConsoleColor.Green, "Running CreateClient");
         using var dbSession = new DbSession();
         using var transaction = new UnitOfWork(dbSession);
-        var repo = new ClientRepository(dbSession);
+        var repoClient = new ClientRepository(dbSession);
+        var repoLog = new LogClientRepository(dbSession);
 
         try
         {
             transaction.BeginTransaction();
-            var rows = repo.Insert(client);
+            var rows = repoClient.Insert(client);
+            repoLog.Insert(rows);
             transaction.Commit();
             printColor(ConsoleColor.Yellow, $"\tLines affected: {rows}");
         }
@@ -46,12 +45,14 @@ public static class Application
         printColor(ConsoleColor.Green, $"Running CreateClients");
         using var dbSession = new DbSession();
         using var transaction = new UnitOfWork(dbSession);
-        var repo = new ClientRepository(dbSession);
+        var repoClient = new ClientRepository(dbSession);
+        var repoLog = new LogClientRepository(dbSession);
 
         try
         {
             transaction.BeginTransaction();
-            var rows = repo.Insert(clients);
+            var rows = repoClient.Insert(clients);
+            repoLog.Insert(rows);
             transaction.Commit();
             printColor(ConsoleColor.Yellow, $"\tLines affected: {rows}");
         }
