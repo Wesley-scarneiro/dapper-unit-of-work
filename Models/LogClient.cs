@@ -9,6 +9,6 @@ public class LogClient
 
     public override string ToString()
     {
-        return $"LogClient=[Id={Id}, DateTime={DateTime}, User={User}, Insertions={Insertions}, Updates={Updates}, Deletions={Deletions}]";
+        return $"LogClient=[Id={Id}, DateTime={DateTime}, User={User}, Insertions={Insertions}]";
     }
 }
