@@ -5,8 +5,6 @@ public class LogClient
     public DateTime? DateTime {get; set;}
     public string? User {get; set;}
     public int Insertions {get; set;}
-    public int Updates {get; set;}
-    public int Deletions {get; set;}
 
 
     public override string ToString()
