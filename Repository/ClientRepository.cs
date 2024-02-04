@@ -1,8 +1,9 @@
 using ConsoleApp.Models;
+using ConsoleApp.Repository.Interface;
 using Dapper;
 
 namespace ConsoleApp.Repository;
-public class ClientRepository
+public class ClientRepository : IRepository<Client>
 {
     private readonly DbSession _session;
 
